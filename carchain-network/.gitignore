@@ -1,0 +1,53 @@
+# Fabric binaries — large, re-downloadable
+bin/
+
+# CA server runtime data — contains private keys and DB
+ca/orderer/msp/keystore/
+ca/orderer/fabric-ca-server.db
+ca/orderer/IssuerPublicKey
+ca/orderer/IssuerRevocationPublicKey
+ca/usersorg/msp/keystore/
+ca/usersorg/fabric-ca-server.db
+ca/usersorg/IssuerPublicKey
+ca/usersorg/IssuerRevocationPublicKey
+
+# Orderer private keys and ledger data
+orderer/msp/keystore/
+orderer/msp/IssuerPublicKey
+orderer/msp/IssuerRevocationPublicKey
+orderer/tls/keystore/
+orderer/tls/IssuerPublicKey
+orderer/tls/IssuerRevocationPublicKey
+orderer/data/
+orderer/genesis/
+
+# Peer private keys and ledger data
+peers/peer0/msp/keystore/
+peers/peer0/msp/IssuerPublicKey
+peers/peer0/msp/IssuerRevocationPublicKey
+peers/peer0/tls/keystore/
+peers/peer0/tls/IssuerPublicKey
+peers/peer0/tls/IssuerRevocationPublicKey
+peers/peer0/data/
+peers/peer1/msp/keystore/
+peers/peer1/msp/IssuerPublicKey
+peers/peer1/msp/IssuerRevocationPublicKey
+peers/peer1/tls/keystore/
+peers/peer1/tls/IssuerPublicKey
+peers/peer1/tls/IssuerRevocationPublicKey
+peers/peer1/data/
+
+# Organization admin private keys
+organizations/usersorg/admin/msp/keystore/
+organizations/usersorg/admin/msp/IssuerPublicKey
+organizations/usersorg/admin/msp/IssuerRevocationPublicKey
+
+# Generated channel artifacts
+channel-artifacts/
+
+# Chaincode dependencies
+chaincode/carChain/node_modules/
+
+# OS
+.DS_Store
+Thumbs.db

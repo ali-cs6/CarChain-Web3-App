@@ -1,0 +1,28 @@
+{
+  "name": "carchain",
+  "version": "1.0.0",
+  "description": "Smart contract for CarChain, a blockchain-based car marketplace",
+  "main": "index.js",
+  "scripts": {
+    "start": "fabric-chaincode-node start",
+    "test": "jest"
+  },
+  "keywords": [
+    "hyperledger",
+    "fabric",
+    "chaincode",
+    "car",
+    "marketplace"
+  ],
+  "author": "CarChain Team",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "fabric-contract-api": "2.5.8",
+    "fabric-shim": "2.5.8"
+  },
+  "devDependencies": {
+  }
+}

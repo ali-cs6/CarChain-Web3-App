@@ -1,0 +1,42 @@
+General:
+    ListenAddress: 0.0.0.0
+    ListenPort: 7050
+    TLS:
+        Enabled: true
+        PrivateKey: /var/hyperledger/orderer/tls/keystore/server.key
+        Certificate: /var/hyperledger/orderer/tls/signcerts/cert.pem
+        RootCAs:
+          - /var/hyperledger/orderer/tls/tlscacerts/ca.crt
+        ClientAuthRequired: false
+    Keepalive:
+        ServerMinInterval: 60s
+        ServerInterval: 7200s
+        ServerTimeout: 20s
+    BootstrapMethod: none
+    LocalMSPDir: /var/hyperledger/orderer/msp
+    LocalMSPID: UsersOrgMSP
+    BCCSP:
+        Default: SW
+        SW:
+            Hash: SHA2
+            Security: 256
+FileLedger:
+    Location: /var/hyperledger/production/orderer
+Operations:
+    ListenAddress: 0.0.0.0:9443
+    TLS:
+        Enabled: false
+Admin:
+    ListenAddress: 0.0.0.0:7053
+    TLS:
+        Enabled: true
+        PrivateKey: /var/hyperledger/orderer/tls/keystore/server.key
+        Certificate: /var/hyperledger/orderer/tls/signcerts/cert.pem
+        RootCAs:
+          - /var/hyperledger/orderer/tls/tlscacerts/ca.crt
+        ClientAuthRequired: true
+        ClientRootCAs:
+          - /var/hyperledger/orderer/tls/tlscacerts/ca.crt
+ChannelParticipation:
+    Enabled: true
+    MaxRequestBodySize: 1 MB

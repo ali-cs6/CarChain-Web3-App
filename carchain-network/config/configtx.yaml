@@ -1,0 +1,117 @@
+---
+Organizations:
+  - &UsersOrg
+    Name: UsersOrg
+    ID: UsersOrgMSP
+    MSPDir: ../organizations/usersorg/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('UsersOrgMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('UsersOrgMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('UsersOrgMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('UsersOrgMSP.member')"
+
+Capabilities:
+  Channel: &ChannelCapabilities
+    V2_0: true
+  Orderer: &OrdererCapabilities
+    V2_0: true
+  Application: &ApplicationCapabilities
+    V2_0: true
+
+Application: &ApplicationDefaults
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    LifecycleEndorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Endorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+  Capabilities:
+    <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+  OrdererType: etcdraft
+  Addresses:
+    - orderer.usersorg:7050
+  EtcdRaft:
+    Consenters:
+      - Host: orderer.usersorg
+        Port: 7050
+        ClientTLSCert: ../orderer/tls/signcerts/cert.pem
+        ServerTLSCert: ../orderer/tls/signcerts/cert.pem
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+  Capabilities:
+    <<: *OrdererCapabilities
+
+Channel: &ChannelDefaults
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+  Capabilities:
+    <<: *ChannelCapabilities
+
+Profiles:
+  CarChainOrdererGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *UsersOrg
+    Consortiums:
+      CarChainConsortium:
+        Organizations:
+          - *UsersOrg
+
+  CarChainChannel:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *UsersOrg
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *UsersOrg

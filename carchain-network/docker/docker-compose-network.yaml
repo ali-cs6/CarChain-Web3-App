@@ -1,0 +1,100 @@
+networks:
+  carchain:
+    name: carchain
+
+services:
+  orderer.usersorg:
+    container_name: orderer.usersorg
+    image: hyperledger/fabric-orderer:2.5.15
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/orderer/config
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_LOCALMSPID=UsersOrgMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/keystore/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/signcerts/cert.pem
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/tlscacerts/ca.crt]
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=none
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+      - ORDERER_ADMIN_TLS_ENABLED=true
+      - ORDERER_ADMIN_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/signcerts/cert.pem
+      - ORDERER_ADMIN_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/keystore/server.key
+      - ORDERER_ADMIN_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/tlscacerts/ca.crt]
+      - ORDERER_ADMIN_TLS_CLIENTAUTHREQUIRED=true
+      - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/orderer/tls/tlscacerts/ca.crt]
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:7053
+      - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:9443
+    volumes:
+      - ../orderer/msp:/var/hyperledger/orderer/msp
+      - ../orderer/tls:/var/hyperledger/orderer/tls
+      - ../orderer/data:/var/hyperledger/production/orderer
+      - ../orderer/genesis/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ../orderer/orderer.yaml:/var/hyperledger/orderer/config/orderer.yaml
+    ports:
+      - "7050:7050"
+      - "7053:7053"
+      - "9443:9443"
+    networks:
+      - carchain
+
+  peer0.usersorg:
+    container_name: peer0.usersorg
+    image: hyperledger/fabric-peer:2.5.15
+    environment:
+      - CORE_PEER_ID=peer0.usersorg
+      - CORE_PEER_ADDRESS=peer0.usersorg:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.usersorg:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_LOCALMSPID=UsersOrgMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/signcerts/cert.pem
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/keystore/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/tlscacerts/ca.crt
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.usersorg:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.usersorg:7051
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9444
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=carchain
+    volumes:
+      - ../peers/peer0/msp:/etc/hyperledger/fabric/msp
+      - ../peers/peer0/tls:/etc/hyperledger/fabric/tls
+      - ../peers/peer0/data:/var/hyperledger/production
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "7051:7051"
+      - "9444:9444"
+    networks:
+      - carchain
+
+  peer1.usersorg:
+    container_name: peer1.usersorg
+    image: hyperledger/fabric-peer:2.5.15
+    environment:
+      - CORE_PEER_ID=peer1.usersorg
+      - CORE_PEER_ADDRESS=peer1.usersorg:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer1.usersorg:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_LOCALMSPID=UsersOrgMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/signcerts/cert.pem
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/keystore/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/tlscacerts/ca.crt
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.usersorg:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.usersorg:7051
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9445
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=carchain
+    volumes:
+      - ../peers/peer1/msp:/etc/hyperledger/fabric/msp
+      - ../peers/peer1/tls:/etc/hyperledger/fabric/tls
+      - ../peers/peer1/data:/var/hyperledger/production
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8051:7051"
+      - "9445:9445"
+    networks:
+      - carchain

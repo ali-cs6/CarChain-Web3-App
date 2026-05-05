@@ -1,0 +1,34 @@
+networks:
+  carchain:
+    name: carchain
+
+services:
+  ca.usersorg:
+    image: hyperledger/fabric-ca:1.5.12
+    container_name: ca.usersorg
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-usersorg
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+    ports:
+      - "7054:7054"
+    volumes:
+      - ../ca/usersorg:/etc/hyperledger/fabric-ca-server
+    command: sh -c 'fabric-ca-server start -b admin-usersorg:adminpw'
+    networks:
+      - carchain
+
+  ca.orderer:
+    image: hyperledger/fabric-ca:1.5.12
+    container_name: ca.orderer
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-orderer
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+    ports:
+      - "8054:8054"
+    volumes:
+      - ../ca/orderer:/etc/hyperledger/fabric-ca-server
+    command: sh -c 'fabric-ca-server start -b admin-orderer:adminpw'
+    networks:
+      - carchain
