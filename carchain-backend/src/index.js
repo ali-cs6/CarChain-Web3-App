@@ -1,9 +1,16 @@
-// const {ApiError} = require('./utils/ApiErrors.js');
-// console.log("index.js is running");
-// console.log(new ApiError(404, "Not found", [], "Stack trace example"));
+const app = require("./app.js");
+const connectDB = require("./db/index.js");
 
 require("dotenv").config();
 
-const connectDB = require("./db/index.js");
+const PORT = process.env.PORT || 8000;
 
-connectDB();
+// Connect to the database
+connectDB().then(() => {
+  // Start the server after successful DB connection
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}).catch((error) => {
+  console.error("Failed to connect to the database:", error);
+});
