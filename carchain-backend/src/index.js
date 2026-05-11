@@ -14,3 +14,8 @@ connectDB().then(() => {
 }).catch((error) => {
   console.error("Failed to connect to the database:", error);
 });
+
+// Graceful shutdown on SIGTERM/SIGINT
+const { closeGateway } = require("./utils/fabricUtils.js");
+process.on("SIGTERM", () => { closeGateway(); process.exit(0); });
+process.on("SIGINT",  () => { closeGateway(); process.exit(0); });
