@@ -20,14 +20,13 @@ function chaincodeError(fnName, err) {
   const clean = message.replace(/^\d+ \w+: /, "").trim();
 
   // Map common chaincode error patterns to HTTP status codes
-  if (/already exists/i.test(clean))   throw new ApiError(409, clean);
-  if (/does not exist/i.test(clean))   throw new ApiError(404, clean);
-  if (/not active/i.test(clean))       throw new ApiError(422, clean);
-  if (/invalid status/i.test(clean))   throw new ApiError(400, clean);
+  if (/already exists/i.test(clean)) throw new ApiError(409, clean);
+  if (/does not exist/i.test(clean)) throw new ApiError(404, clean);
+  if (/not active/i.test(clean)) throw new ApiError(422, clean);
+  if (/invalid status/i.test(clean)) throw new ApiError(400, clean);
 
   throw new ApiError(500, clean);
 }
-
 
 // QUERIES  (evaluate — read-only, no transaction committed)
 
@@ -54,7 +53,10 @@ async function getAllVehicles() {
 async function queryVehicle(vehicleId) {
   try {
     const contract = await getContract();
-    const result = await contract.evaluateTransaction("queryVehicle", vehicleId);
+    const result = await contract.evaluateTransaction(
+      "queryVehicle",
+      vehicleId,
+    );
     return decode(result);
   } catch (err) {
     if (err instanceof ApiError) throw err;
@@ -70,7 +72,10 @@ async function queryVehicle(vehicleId) {
 async function getVehiclesByOwner(owner) {
   try {
     const contract = await getContract();
-    const result = await contract.evaluateTransaction("getVehiclesByOwner", owner);
+    const result = await contract.evaluateTransaction(
+      "getVehiclesByOwner",
+      owner,
+    );
     return decode(result);
   } catch (err) {
     if (err instanceof ApiError) throw err;
@@ -86,7 +91,10 @@ async function getVehiclesByOwner(owner) {
 async function getVehicleHistory(vehicleId) {
   try {
     const contract = await getContract();
-    const result = await contract.evaluateTransaction("getVehicleHistory", vehicleId);
+    const result = await contract.evaluateTransaction(
+      "getVehicleHistory",
+      vehicleId,
+    );
     return decode(result);
   } catch (err) {
     if (err instanceof ApiError) throw err;
@@ -102,7 +110,10 @@ async function getVehicleHistory(vehicleId) {
 async function verifyVehicle(vehicleId) {
   try {
     const contract = await getContract();
-    const result = await contract.evaluateTransaction("verifyVehicle", vehicleId);
+    const result = await contract.evaluateTransaction(
+      "verifyVehicle",
+      vehicleId,
+    );
     return decode(result);
   } catch (err) {
     if (err instanceof ApiError) throw err;
@@ -131,7 +142,7 @@ async function registerVehicle(vehicleId, make, model, year, color, owner) {
       model,
       year,
       color,
-      owner
+      owner,
     );
     return decode(result);
   } catch (err) {
@@ -152,7 +163,7 @@ async function transferOwnership(vehicleId, newOwner) {
     const result = await contract.submitTransaction(
       "transferOwnership",
       vehicleId,
-      newOwner
+      newOwner,
     );
     return decode(result);
   } catch (err) {
@@ -173,7 +184,7 @@ async function updateVehicleStatus(vehicleId, newStatus) {
     const result = await contract.submitTransaction(
       "updateVehicleStatus",
       vehicleId,
-      newStatus
+      newStatus,
     );
     return decode(result);
   } catch (err) {

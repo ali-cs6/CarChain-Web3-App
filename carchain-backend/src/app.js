@@ -13,12 +13,9 @@ app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }));
 // Routes
 app.use("/api/v1/users", userRoutes);
 
-// Test route to verify Fabric connection and query
-const fabricService = require("./services/fabric.services.js");
-app.get("/api/v1/fabric-test", async (req, res) => {
-  const vehicles = await fabricService.getAllVehicles();
-  res.json(vehicles);
-});
+// vehicle routes
+const vehicleRouter = require("./routes/vehicle.routes");
+app.use("/api/v1/vehicles", vehicleRouter);
 
 
 
