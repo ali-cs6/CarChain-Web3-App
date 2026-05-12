@@ -12,6 +12,7 @@ const {
   updateVehicleStatus,
 } = require("../controllers/vehicle.controller.js");
 const { verifyJWT } = require("../middlewares/auth.middleware.js");
+const { auditLog } = require("../middlewares/audit.middleware.js");
 
 const router = Router();
 
@@ -26,8 +27,8 @@ router.get("/:vehicleId/history", getVehicleHistory);
 router.get("/:vehicleId/verify", verifyVehicle);
 
 // Invokes (POST / PUT)
-router.post("/", registerVehicle);
-router.put("/:vehicleId/transfer", transferOwnership);
-router.put("/:vehicleId/status", updateVehicleStatus);
+router.post("/", auditLog("registerVehicle"), registerVehicle);
+router.put("/:vehicleId/transfer", auditLog("transferOwnership"), transferOwnership);
+router.put("/:vehicleId/status", auditLog("updateVehicleStatus"), updateVehicleStatus);
 
 module.exports = router;
