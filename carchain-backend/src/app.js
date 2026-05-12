@@ -22,6 +22,10 @@ app.use("/api/v1/vehicles", vehicleRouter);
 const adminRouter = require("./routes/admin.routes.js");
 app.use("/api/v1/admin", adminRouter);
 
+// listing routes (GET public, POST/PATCH/DELETE protected)
+const listingRouter = require("./routes/listing.routes.js");
+app.use("/api/v1/listings", listingRouter);
+
 // Global error handler — must be last
 app.use(errorHandler);
 
