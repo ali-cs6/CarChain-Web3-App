@@ -45,7 +45,6 @@ async function persistLog(entry) {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // auditLog(action)
 //
 // Usage in routes:
@@ -53,7 +52,6 @@ async function persistLog(entry) {
 //
 // It wraps the response via res.json() monkey-patching so we capture
 // whatever the controller actually sends back — without touching controller code.
-// ─────────────────────────────────────────────────────────────────────────────
 function auditLog(action) {
   return async (req, res, next) => {
     const startedAt = Date.now();
@@ -66,15 +64,15 @@ function auditLog(action) {
 
       // Fire-and-forget — do not await so response is never delayed
       persistLog({
-        userId:     req.user?._id || null,
+        userId: req.user?._id || null,
         action,
-        vehicleId:  extractVehicleId(req),
+        vehicleId: extractVehicleId(req),
         fabricTxId: isSuccess ? extractFabricTxId(responseData) : null,
-        payload:    buildPayload(req),
-        response:   isSuccess ? responseData : null,
-        error:      !isSuccess ? (body?.message || "Unknown error") : null,
-        status:     isSuccess ? "success" : "failure",
-        ipAddress:  extractIp(req),
+        payload: buildPayload(req),
+        response: isSuccess ? responseData : null,
+        error: !isSuccess ? body?.message || "Unknown error" : null,
+        status: isSuccess ? "success" : "failure",
+        ipAddress: extractIp(req),
       });
 
       // Call original res.json — response goes to client immediately
@@ -86,14 +84,14 @@ function auditLog(action) {
     const wrappedNext = async (err) => {
       if (err) {
         await persistLog({
-          userId:    req.user?._id || null,
+          userId: req.user?._id || null,
           action,
           vehicleId: extractVehicleId(req),
           fabricTxId: null,
-          payload:   buildPayload(req),
-          response:  null,
-          error:     err?.message || "Unknown error",
-          status:    "failure",
+          payload: buildPayload(req),
+          response: null,
+          error: err?.message || "Unknown error",
+          status: "failure",
           ipAddress: extractIp(req),
         });
       }

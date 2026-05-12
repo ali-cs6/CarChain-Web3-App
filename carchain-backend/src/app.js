@@ -10,13 +10,16 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }));
 
-// Routes
+// user routes
 app.use("/api/v1/users", userRoutes);
 
 // vehicle routes
-const vehicleRouter = require("./routes/vehicle.routes");
+const vehicleRouter = require("./routes/vehicle.routes.js");
 app.use("/api/v1/vehicles", vehicleRouter);
 
+// admin routes
+const adminRouter = require("./routes/admin.routes.js");
+app.use("/api/v1/admin", adminRouter);
 
 
 

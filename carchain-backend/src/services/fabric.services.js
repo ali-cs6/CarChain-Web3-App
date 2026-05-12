@@ -193,6 +193,21 @@ async function updateVehicleStatus(vehicleId, newStatus) {
   }
 }
 
+/** Admin-only: initialize the ledger with seed data. This is a critical action that should be audited. */
+async function initLedger() {
+  try {
+    const contract = await getContract();
+    // initLedger takes no arguments
+    const result = await contract.submitTransaction("initLedger");
+    // initLedger returns nothing from chaincode, so result buffer will be empty
+    return { message: "Ledger initialized with seed vehicles" };
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    chaincodeError("initLedger", err);
+  }
+}
+
+
 module.exports = {
   // queries
   getAllVehicles,
@@ -204,4 +219,5 @@ module.exports = {
   registerVehicle,
   transferOwnership,
   updateVehicleStatus,
+  initLedger,
 };

@@ -1,3 +1,3 @@
-const DB_NAME = "carchainAPI";
+// const DB_NAME = "carchainAPI";
 
-module.exports = {DB_NAME};
+// module.exports = {DB_NAME};
