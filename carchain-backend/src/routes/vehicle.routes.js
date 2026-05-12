@@ -16,8 +16,8 @@ const { auditLog } = require("../middlewares/audit.middleware.js");
 
 const router = Router();
 
-// All vehicle routes are protected
-router.use(verifyJWT);
+
+// router.use(verifyJWT);
 
 // Queries (GET)
 router.get("/", getAllVehicles);
@@ -27,8 +27,8 @@ router.get("/:vehicleId/history", getVehicleHistory);
 router.get("/:vehicleId/verify", verifyVehicle);
 
 // Invokes (POST / PUT)
-router.post("/", auditLog("registerVehicle"), registerVehicle);
-router.put("/:vehicleId/transfer", auditLog("transferOwnership"), transferOwnership);
-router.put("/:vehicleId/status", auditLog("updateVehicleStatus"), updateVehicleStatus);
+router.post("/", verifyJWT, auditLog("registerVehicle"), registerVehicle);
+router.put("/:vehicleId/transfer", verifyJWT, auditLog("transferOwnership"), transferOwnership);
+router.put("/:vehicleId/status", verifyJWT, auditLog("updateVehicleStatus"), updateVehicleStatus);
 
 module.exports = router;
