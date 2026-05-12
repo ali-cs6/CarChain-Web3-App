@@ -1,3 +1,1 @@
-// const DB_NAME = "carchainAPI";
-
-// module.exports = {DB_NAME};
+// DB name is embedded in MONGODB_URI — no shared constants needed yet.

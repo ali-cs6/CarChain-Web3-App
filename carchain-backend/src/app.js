@@ -2,6 +2,7 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const cors = require("cors");
 const userRoutes = require("./routes/user.routes.js");
+const { errorHandler } = require("./middlewares/error.middleware.js");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/v1/vehicles", vehicleRouter);
 const adminRouter = require("./routes/admin.routes.js");
 app.use("/api/v1/admin", adminRouter);
 
-
+// Global error handler — must be last
+app.use(errorHandler);
 
 module.exports = app;

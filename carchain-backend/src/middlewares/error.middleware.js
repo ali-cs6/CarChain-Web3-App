@@ -1,10 +1,9 @@
-// check what should be imported?
-const { ApiError } = require("../utils/ApiError");
+"use strict";
 
+const { ApiError } = require("../utils/ApiErrors");
 
-// catches anything forwarded by asyncHandler via next(error)
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
+function errorHandler(err, req, res, next) {
+  const statusCode = err instanceof ApiError ? err.statusCode : 500;
   const message = err.message || "Something went wrong";
 
   return res.status(statusCode).json({
@@ -14,4 +13,6 @@ app.use((err, req, res, next) => {
     errors: err.errors || [],
     ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
   });
-});
+}
+
+module.exports = { errorHandler };
