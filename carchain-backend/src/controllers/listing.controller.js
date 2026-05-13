@@ -5,6 +5,7 @@ const { ApiError } = require("../utils/ApiErrors");
 const { ApiResponse } = require("../utils/ApiResponse");
 const Listing = require("../models/listing.model");
 const fabricService = require("../services/fabric.services");
+const { uploadToCloudinary } = require("../configs/cloudinary.config");
 
 // GET /api/v1/listings  — public
 const getListings = asyncHandler(async (req, res) => {
@@ -164,10 +165,48 @@ const deleteListing = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, null, "Listing deleted successfully"));
 });
 
+// POST /api/v1/listings/:vehicleId/photos  — auth, seller only, max 5 photos
+const uploadPhotos = asyncHandler(async (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    throw new ApiError(400, "No images provided");
+  }
+
+  const listing = await Listing.findOne({ vehicleId: req.params.vehicleId });
+  if (!listing) throw new ApiError(404, "Listing not found");
+  if (!listing.sellerId.equals(req.user._id)) {
+    throw new ApiError(403, "You are not the seller of this listing");
+  }
+
+  const remaining = 5 - listing.photos.length;
+  if (remaining <= 0) {
+    throw new ApiError(400, "Maximum of 5 photos per listing already reached");
+  }
+
+  const filesToUpload = req.files.slice(0, remaining);
+
+  const urls = await Promise.all(
+    filesToUpload.map((file) => uploadToCloudinary(file.buffer)),
+  );
+
+  listing.photos.push(...urls);
+  await listing.save();
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        listing,
+        `${urls.length} photo(s) uploaded successfully`,
+      ),
+    );
+});
+
 module.exports = {
   getListings,
   getListingByVehicleId,
   createListing,
   updateListing,
   deleteListing,
+  uploadPhotos,
 };
