@@ -26,6 +26,10 @@ app.use("/api/v1/admin", adminRouter);
 const listingRouter = require("./routes/listing.routes.js");
 app.use("/api/v1/listings", listingRouter);
 
+// sale routes (all protected — seller only)
+const saleRouter = require("./routes/sale.routes.js");
+app.use("/api/v1/sales", saleRouter);
+
 // Global error handler — must be last
 app.use(errorHandler);
 

@@ -1,7 +1,7 @@
+require("dotenv").config(); // must run before any other require that reads process.env
+
 const app = require("./app.js");
 const connectDB = require("./db/index.js");
-
-require("dotenv").config();
 
 const PORT = process.env.PORT || 8000;
 

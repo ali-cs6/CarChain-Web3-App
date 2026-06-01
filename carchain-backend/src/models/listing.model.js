@@ -47,6 +47,11 @@ const listingSchema = new Schema(
       type: Number,
       default: 0,
     },
+    contactNumber: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     // Denormalized from Fabric for filtering without hitting the ledger on every query
     make: { type: String, trim: true },
     model: { type: String, trim: true },

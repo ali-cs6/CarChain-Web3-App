@@ -115,4 +115,30 @@ const getAllUsers = asyncHandler(async (req, res) => {
   );
 });
 
-module.exports = { initLedger, getAuditLogs, getAllUsers };
+// PATCH /api/v1/admin/users/:userId/verification
+// Allows admin to approve or reject a user's verification status.
+const updateUserVerification = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  const { verificationStatus } = req.body;
+
+  const ALLOWED = ["pending", "verified", "rejected"];
+  if (!ALLOWED.includes(verificationStatus)) {
+    throw new ApiError(400, `verificationStatus must be one of: ${ALLOWED.join(", ")}`);
+  }
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { verificationStatus },
+    { new: true, runValidators: true }
+  ).select("-password -refreshToken");
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "User verification status updated"));
+});
+
+module.exports = { initLedger, getAuditLogs, getAllUsers, updateUserVerification };

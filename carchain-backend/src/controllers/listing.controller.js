@@ -82,12 +82,12 @@ const getListingByVehicleId = asyncHandler(async (req, res) => {
 
 // POST /api/v1/listings  — auth required
 const createListing = asyncHandler(async (req, res) => {
-  const { vehicleId, price, location, mileage, description } = req.body;
+  const { vehicleId, price, location, mileage, description, contactNumber } = req.body;
 
-  if (!vehicleId || price == null || !location || mileage == null) {
+  if (!vehicleId || price == null || !location || mileage == null || !contactNumber) {
     throw new ApiError(
       400,
-      "vehicleId, price, location, and mileage are required",
+      "vehicleId, price, location, mileage, and contactNumber are required",
     );
   }
 
@@ -116,6 +116,7 @@ const createListing = asyncHandler(async (req, res) => {
     location,
     mileage,
     description: description || "",
+    contactNumber: contactNumber.trim(),
     // Denormalize vehicle metadata from the ledger for fast filtering
     make: vehicle.make,
     model: vehicle.model,
@@ -137,7 +138,7 @@ const updateListing = asyncHandler(async (req, res) => {
     throw new ApiError(403, "You are not the seller of this listing");
   }
 
-  const allowed = ["price", "location", "mileage", "description", "isForSale"];
+  const allowed = ["price", "location", "mileage", "description", "isForSale", "photos", "contactNumber"];
   allowed.forEach((field) => {
     if (req.body[field] !== undefined) listing[field] = req.body[field];
   });

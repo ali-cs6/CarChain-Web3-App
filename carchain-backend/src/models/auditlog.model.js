@@ -23,6 +23,7 @@ const auditLogSchema = new Schema(
         "transferOwnership",
         "updateVehicleStatus",
         "initLedger",
+        "completeSale",
       ],
     },
     vehicleId: {

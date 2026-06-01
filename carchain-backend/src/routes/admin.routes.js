@@ -6,6 +6,7 @@ const {
   initLedger,
   getAuditLogs,
   getAllUsers,
+  updateUserVerification,
 } = require("../controllers/admin.controller.js");
 
 const router = Router();
@@ -16,5 +17,6 @@ router.use(verifyJWT, requireAdmin);
 router.post("/init-ledger", initLedger);
 router.get("/audit-logs", getAuditLogs);
 router.get("/users", getAllUsers);
+router.patch("/users/:userId/verification", updateUserVerification);
 
 module.exports = router;
